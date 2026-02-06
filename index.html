@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>FF14 M12S HELPER
+</title>
+<style>
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+body {
+  overflow: visible;
+}
+
+html,body{margin:0;padding:0;background:transparent;font-family:"Microsoft YaHei",sans-serif;user-select:none;}
+.panel{
+  background:rgba(17,17,17,0.85);
+  padding:10px;
+  border-radius:8px;
+  color:#C7FE91;
+  width:460px;
+
+  box-sizing:border-box;
+  white-space:nowrap;
+  position:relative;
+  overflow: visible; 
+}
+.panel.collapsed {
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  border: none;
+  box-shadow: none;
+  height: 28px;      
+  min-height: 0;
+}
+
+.panel.collapsed::before {
+  display: none;     
+}
+
+
+
+
+.line{margin:4px 0;}
+.line.blue{color:#82FDFF;}
+.top-bar{display:flex;align-items:center;margin-bottom:10px;}
+select{padding:4px;border-radius:4px;border:none;background:#222;color:white;font-size:14px;margin-right:10px;}
+.content{display:flex;justify-content:space-between;}
+.text-area{flex:1;margin-right:10px;}
+.buttons{display:flex;flex-direction:column;flex:0 0 200px;}
+.buttons-row{display:flex;justify-content:space-between;margin:2px 0;}
+.buttons-row button{flex:0 0 95px;padding:6px;background:black;color:white;border:none;border-radius:4px;cursor:pointer;}
+.buttons-row button.active{background:white;color:black;}
+#hideBtn{
+  position:absolute;
+  top:230px;
+  right:5px;
+  padding:2px 2px;
+  background:#00000000;
+  color:white;
+  border:none;
+  border-radius:4px;
+  cursor:pointer;
+  font-size:12px;
+  z-index:9999;
+}
+.fake-select {
+  position: relative;
+  background: #222;
+  color: white;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  min-width: 140px;
+}
+
+.fake-select .selected {
+  padding: 4px 8px;
+}
+
+.fake-select .options {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #222;
+  border-radius: 4px;
+  margin-top: 2px;
+  z-index: 9999;
+}
+
+.fake-select .options div {
+  padding: 4px 8px;
+}
+
+.fake-select .options div:hover {
+  background: #444;
+}
+
+
+.panel {
+  --panel-alpha: 0.85;
+  background: rgba(18, 20, 23, var(--panel-alpha));
+  border: 2px solid rgba(50, 65, 85, calc(var(--panel-alpha) + 0.05));
+  box-shadow:
+    inset 0 0 0 1px rgba(90, 115, 135, calc(var(--panel-alpha) * 0.6)),
+    inset 0 0 0 2px rgba(130, 155, 180, calc(var(--panel-alpha) * 0.35)),
+    0 3px 8px rgba(0,0,0,var(--panel-alpha));
+
+  border-radius: 4px;
+}
+
+.panel::before {
+  content:"";
+  position:absolute;
+  inset:2px;
+  border: 1px solid rgba(180,200,230, calc(var(--panel-alpha) * 0.35));
+  border-radius:3px;
+  pointer-events:none;
+}
+
+
+
+
+.top-bar {
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  padding-bottom: 1px;
+}
+
+#hideBtn {
+  background: rgba(255, 255, 255, 0);
+  color: #fff;
+  font-size: 12px;
+  width: 28px;
+  height: 28px;
+  line-height: 22px;
+  text-align: center;
+  border-radius: 50%;
+  transition: background .2s;
+}
+
+.top-bar label {
+  margin-right: 10px;
+}
+.fake-select {
+  background: rgba(40,40,45,0.85);
+  border: 1px solid rgba(255,255,255,0.18);
+}
+.fake-select .selected {
+  color: #eef;
+}
+.fake-select .options {
+  border: 1px solid rgba(255,255,255,0.18);
+}
+.fake-select .options div:hover {
+  background: rgba(80,80,95,0.85);
+}
+
+input[type="range"] {
+  accent-color: #7dcfff;
+}
+
+#lines .line {
+  font-size: 14px;
+  line-height: 1.4;
+  padding: 0 4px;
+}
+
+.buttons-row button.locked {
+  background: rgba(50,50,50,0.5);
+  color: #888;
+  cursor: not-allowed;
+}
+
+.buttons-row button {
+  background: rgba(35,35,40,0.9);
+  border: 1px solid rgba(255,255,255,0.15);
+  transition: background .2s, color .2s;
+}
+.buttons-row button:hover {
+  background: rgba(50,50,60,0.9);
+}
+.buttons-row button.active {
+  background: rgba(0,140,210,0.9);
+  color: #fff;
+}
+
+.settings {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+#settingsBtn {
+  background: rgba(80,80,80,0.8);
+  border: 1px solid rgba(120,120,120,0.8);
+  color: #ccc;
+  border-radius: 4px;
+  padding: 2px 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.settings-popout {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 6px;
+  background: rgba(30,30,35,0.95);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 6px;
+  padding: 8px 10px;
+  display: none;
+  min-width: 150px;
+  z-index: 9999;
+}
+
+.settings-popout.open {
+  display: block;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #aaa;
+}
+
+</style>
+</head>
+<body>
+
+<div class="panel" id="panel">
+  <button id="hideBtn">🔍</button>
+  <div id="panelBody">
+    <div class="top-bar">
+      <label>打法</label>
+      <div class="fake-select" id="strategySelect">
+        <div class="selected" id="strategySelected">盗火改</div>
+        <div class="options" id="strategyOptions"></div>
+      </div>
+      <div class="settings">
+        <button id="resetBtn" style="
+          background: rgba(80,80,80,0.8);
+          border: 1px solid rgba(120,120,120,0.8);
+          color: #ccc;
+          border-radius: 4px;
+          padding: 2px 6px;
+          cursor: not-allowed;
+          font-size: 12px;
+        " disabled>重置</button>
+        <button id="settingsBtn" type="button">设置</button>
+        <div class="settings-popout" id="settingsPopout">
+          <div class="settings-row">
+            <span>透明度</span>
+            <input
+              id="opacityRange"
+              type="range"
+              min="30"
+              max="100"
+              value="85"
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="text-area" id="lines"></div>
+      <div class="buttons" id="btnContainer"></div>
+    </div>
+  </div>
+
+  <div class="resize-hint"></div>
+</div>
+
+
+
+
+<script>
+// ================== 状态变量 ==================
+const state={E1:"MT组去A，ST组去B",F1:"MT组去4，ST组去3",E2:"14点上安全",F2:"A点分身",G2:"C点分身",E3:"分摊-13出-分摊-24出",E4:"两侧",E5:"D点"};
+const CIRCLE_NUM=["①","②","③","④","⑤","⑥","⑦","⑧"];
+const strategies=["盗火改","盗火改Uptime"];
+const EMPTY_TEXT = "等待按钮中";
+
+let currentStrategy="盗火改";
+
+// ================== 按钮逻辑 ==================
+const strategyBtnLogic={
+  "盗火改Uptime": {
+    "正点影子":()=>{state.E1="T去A,远奶去B,近去1";state.F1="T去4,远奶去3,近去D";},
+    "斜点影子":()=>{state.E1="T去4,远奶去3,近去D";state.F1="T去A,远奶去B,近去1";},
+    "A上下刀":()=>{state.E2="14点上安全";state.F2="A点分身";state.G2="C点分身";},
+    "C上下刀":()=>{state.E2="23外躲钢铁";state.F2="C点分身";state.G2="A点分身";},
+    "正点分摊":()=>{state.E3="分摊-1出-分摊-2出";},
+    "斜点分摊":()=>{state.E3="1出-分摊-2出-分摊";},
+    "进黑洞":()=>{state.E4="两侧";},
+    "没进黑洞":()=>{state.E4="目标圈";},
+    "去D平台":()=>{state.E5="D点";},
+    "去B平台":()=>{state.E5="B点";}
+  },
+  "盗火改": {
+    "正点影子":()=>{state.E1="MT组A，ST组B";state.F1="MT组4，ST组3";},
+    "斜点影子":()=>{state.E1="MT组4，ST组3";state.F1="MT组A，ST组B";},
+    "A上下刀":()=>{state.E2="14点上安全";state.F2="A点分身";state.G2="C点分身";},
+    "C上下刀":()=>{state.E2="23外躲钢铁";state.F2="C点分身";state.G2="A点分身";},
+    "正点分摊":()=>{state.E3="分摊-1出-分摊-2出";},
+    "斜点分摊":()=>{state.E3="1出-分摊-2出-分摊";},
+    "进黑洞":()=>{state.E4="两侧";},
+    "没进黑洞":()=>{state.E4="目标圈";},
+    "去D平台":()=>{state.E5="D点";},
+    "去B平台":()=>{state.E5="B点";}
+  }
+};
+
+function buildRows(){
+  const waiting = EMPTY_TEXT;
+
+  return [
+    state.E2 || waiting,
+    state.E3 || waiting,
+    state.F2 === waiting ? waiting : `看${state.F2}有没有进黑洞`,
+    state.G2 === waiting ? waiting : `看${state.G2}去哪个平台`,
+    state.E1 === waiting ? waiting : `${state.E1}分摊`,
+    (state.E5 === waiting || state.E4 === waiting) ? waiting : `${state.E5}${state.E4}安全`,
+    state.F1 === waiting ? waiting : `${state.F1}分摊`,
+    state.E4 === waiting ? waiting : `${state.E4}安全`
+  ];
+}
+
+
+function refresh(){
+  const linesDiv=document.getElementById("lines");
+  linesDiv.innerHTML="";
+  buildRows().forEach((text,i)=>{
+    const div=document.createElement("div");
+    div.className="line";
+    if([0,2,3,5].includes(i)) div.classList.add("blue");
+    div.innerText=`${CIRCLE_NUM[i]} ${text}`;
+    linesDiv.appendChild(div);
+  });
+}
+
+function resetState() {
+  state.E1 = EMPTY_TEXT;
+  state.F1 = EMPTY_TEXT;
+  state.E2 = EMPTY_TEXT;
+  state.F2 = EMPTY_TEXT;
+  state.G2 = EMPTY_TEXT;
+  state.E3 = EMPTY_TEXT;
+  state.E4 = EMPTY_TEXT;
+  state.E5 = EMPTY_TEXT;
+
+  btnGroups.forEach(group =>
+    group.forEach(btn => btn.classList.remove("active"))
+  );
+
+  refresh();
+}
+
+
+
+const btnContainer=document.getElementById("btnContainer");
+const btnList=[["正点影子","斜点影子"],["A上下刀","C上下刀"],["正点分摊","斜点分摊"],["进黑洞","没进黑洞"],["去D平台","去B平台"]];
+const btnGroups=[];
+
+btnList.forEach((group,i)=>{
+  const rowDiv=document.createElement("div");
+  rowDiv.className="buttons-row";
+  btnGroups[i]=[];
+  group.forEach(name=>{
+    const btn=document.createElement("button");
+    btn.innerText=name;
+    btn.classList.add("locked");      
+    btn.disabled = true;              
+    btn.onclick=()=>onBtn(i,name);
+    rowDiv.appendChild(btn);
+    btnGroups[i].push(btn);
+  });
+  btnContainer.appendChild(rowDiv);
+});
+
+function onBtn(groupIndex,name){
+  btnGroups[groupIndex].forEach(b=>b.classList.remove("active"));
+  const btn=btnGroups[groupIndex].find(b=>b.innerText===name);
+  if(btn) btn.classList.add("active");
+  const logic=strategyBtnLogic[currentStrategy][name];
+  if(logic) logic();
+  refresh();
+}
+
+const fakeSelect = document.getElementById("strategySelect");
+const selectedDiv = document.getElementById("strategySelected");
+const optionsDiv = document.getElementById("strategyOptions");
+
+strategies.forEach(s => {
+  const div = document.createElement("div");
+  div.innerText = s;
+  div.onclick = () => {
+  currentStrategy = s;
+  selectedDiv.innerText = s;
+  optionsDiv.style.display = "none";
+
+  btnGroups.forEach(group =>
+    group.forEach(btn => {
+      btn.disabled = false;
+      btn.classList.remove("locked");
+    })
+  );
+    const resetBtn = document.getElementById("resetBtn");
+  resetBtn.disabled = false;
+  resetBtn.style.background = "rgba(120,40,40,0.8)";
+  resetBtn.style.border = "1px solid rgba(255,255,255,0.2)";
+  resetBtn.style.color = "#fff";
+  resetBtn.style.cursor = "pointer";
+
+  resetState(); 
+};
+  optionsDiv.appendChild(div);
+});
+
+selectedDiv.onclick = () => {
+  optionsDiv.style.display =
+    optionsDiv.style.display === "block" ? "none" : "block";
+};
+
+document.addEventListener("click", e => {
+  if (!fakeSelect.contains(e.target)) {
+    optionsDiv.style.display = "none";
+  }
+});
+
+
+const panel = document.getElementById("panel");
+const hideBtn = document.getElementById("hideBtn");
+const panelBody = document.getElementById("panelBody");
+let panelVisible = true;
+
+hideBtn.onclick = () => {
+  panelVisible = !panelVisible;
+  panel.classList.toggle("collapsed", !panelVisible);
+  panelBody.style.display = panelVisible ? "" : "none";
+};
+const opacityRange = document.getElementById("opacityRange");
+const settingsBtn = document.getElementById("settingsBtn");
+const settingsPopout = document.getElementById("settingsPopout");
+
+function setPanelOpacity(value) {
+  panel.style.setProperty("--panel-alpha", value / 100);
+}
+
+document.getElementById("resetBtn").onclick = () => {
+  resetState();
+};
+
+opacityRange.oninput = () => {
+  setPanelOpacity(opacityRange.value);
+};
+
+settingsBtn.onclick = (event) => {
+  event.stopPropagation();
+  settingsPopout.classList.toggle("open");
+};
+
+settingsPopout.addEventListener("click", event => {
+  event.stopPropagation();
+});
+
+document.addEventListener("click", () => {
+  settingsPopout.classList.remove("open");
+});
+
+setPanelOpacity(opacityRange.value);
+selectedDiv.innerText = currentStrategy;
+
+btnGroups.forEach(group =>
+  group.forEach(btn => {
+    btn.disabled = false;
+    btn.classList.remove("locked");
+  })
+);
+
+const resetBtn = document.getElementById("resetBtn");
+resetBtn.disabled = false;
+resetBtn.style.background = "rgba(120,40,40,0.8)";
+resetBtn.style.border = "1px solid rgba(255,255,255,0.2)";
+resetBtn.style.color = "#fff";
+resetBtn.style.cursor = "pointer";
+
+resetState();
+
+</script>
+</body>
+</html>
