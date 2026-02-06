@@ -271,8 +271,8 @@ let currentStrategy="盗火改";
 // ================== 按钮逻辑 ==================
 const strategyBtnLogic={
   "盗火改Uptime": {
-    "正点影子":()=>{state.E1="T去A,远奶去B,近去1";state.F1="T去4,远奶去3,近去D";},
-    "斜点影子":()=>{state.E1="T去4,远奶去3,近去D";state.F1="T去A,远奶去B,近去1";},
+    "正点影子":()=>{state.E1="近去1";state.F1="近去D";},
+    "斜点影子":()=>{state.E1="近去D";state.F1="近去1";},
     "A上下刀":()=>{state.E2="14点上安全";state.F2="A点分身";state.G2="C点分身";},
     "C上下刀":()=>{state.E2="23外躲钢铁";state.F2="C点分身";state.G2="A点分身";},
     "正点分摊":()=>{state.E3="分摊-1出-分摊-2出";},
@@ -283,12 +283,12 @@ const strategyBtnLogic={
     "去B平台":()=>{state.E5="B点";}
   },
   "盗火改": {
-    "正点影子":()=>{state.E1="MT组A，ST组B";state.F1="MT组4，ST组3";},
-    "斜点影子":()=>{state.E1="MT组4，ST组3";state.F1="MT组A，ST组B";},
+    "正点影子":()=>{state.E1="B";state.F1="3分摊";},
+    "斜点影子":()=>{state.E1="3";state.F1="B分摊";},
     "A上下刀":()=>{state.E2="14点上安全";state.F2="A点分身";state.G2="C点分身";},
     "C上下刀":()=>{state.E2="23外躲钢铁";state.F2="C点分身";state.G2="A点分身";},
-    "正点分摊":()=>{state.E3="分摊-1出-分摊-2出";},
-    "斜点分摊":()=>{state.E3="1出-分摊-2出-分摊";},
+    "正点分摊":()=>{state.E3="先分摊";},
+    "斜点分摊":()=>{state.E3="先出";},
     "进黑洞":()=>{state.E4="两侧";},
     "没进黑洞":()=>{state.E4="目标圈";},
     "去D平台":()=>{state.E5="D点";},
