@@ -310,11 +310,11 @@ function buildRows(){
   return [
     state.E2 || waiting,
     state.E3 || waiting,
-    state.F2 === waiting ? waiting : `看${state.F2}有没有进黑洞`,
-    state.G2 === waiting ? waiting : `看${state.G2}去哪个平台`,
-    state.E1 === waiting ? waiting : `${state.E1}分摊`,
+    state.F2 === waiting ? waiting : `${state.F2}黑洞`,
+    state.G2 === waiting ? waiting : `${state.G2}平台`,
+    state.E1 === waiting ? waiting : `${state.E1}`,
     (state.E5 === waiting || state.E4 === waiting) ? waiting : `${state.E5}${state.E4}安全`,
-    state.F1 === waiting ? waiting : `${state.F1}分摊`,
+    state.F1 === waiting ? waiting : `${state.F1}`,
     state.E4 === waiting ? waiting : `${state.E4}安全`
   ];
 }
