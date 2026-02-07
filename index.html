@@ -274,8 +274,8 @@ const strategyBtnLogic={
     "斜点影子":()=>{state.E1="3";state.F1="B分摊";},
     "A上下刀":()=>{state.E2="14点上安全";state.F2="A点分身";state.G2="C点分身";},
     "C上下刀":()=>{state.E2="23外躲钢铁";state.F2="C点分身";state.G2="A点分身";},
-    "正点分摊":()=>{state.E3="摊-13-摊-24";},
-    "斜点分摊":()=>{state.E3="AC-摊-BD-摊";},
+    "正点分摊":()=>{state.E3="先分摊";},
+    "斜点分摊":()=>{state.E3="先大圈";},
     "进黑洞":()=>{state.E4="两侧";},
     "没进黑洞":()=>{state.E4="目标圈";},
     "去D平台":()=>{state.E5="D点";},
@@ -297,7 +297,7 @@ function buildRows(){
   const shadowTarget = state.F1 === waiting ? waiting : state.F1.replace("分摊", "");
   const shadowLine = shadowSource === waiting || shadowTarget === waiting
     ? waiting
-    : `影子分摊: ${shadowSource} -> ${shadowTarget}`;
+    : `影子: ${shadowSource} -> ${shadowTarget}`;
 
   const platformPrefix = state.E5 === waiting
     ? "D/B平台"
@@ -310,7 +310,7 @@ function buildRows(){
     : `${platformPrefix} ${state.E4}`;
 
   return [
-    { index: 1, text: state.E3 === waiting ? waiting : `自身: ${state.E3}` },
+    { index: 1, text: state.E3 === waiting ? waiting : `${state.E3}` },
     { index: 4, text: shadowLine },
     { index: 7, text: platformLine }
   ];
