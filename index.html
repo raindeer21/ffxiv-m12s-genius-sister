@@ -35,9 +35,9 @@ html,body{margin:0;padding:0;background:transparent;font-family:"Microsoft YaHei
   margin-bottom:6px;
 }
 select{padding:4px;border-radius:4px;border:none;background:#222;color:white;font-size:14px;margin-right:10px;}
-.content{display:flex;justify-content:space-between;}
-.text-area{flex:1;margin-right:10px;}
-.buttons{display:flex;flex-direction:column;flex:0 0 200px;}
+.content{display:flex;flex-direction:column;gap:10px;}
+.text-area{flex:1;}
+.buttons{display:flex;flex-direction:column;}
 .buttons-row{display:flex;justify-content:space-between;margin:2px 0;}
 .buttons-row button{flex:0 0 95px;padding:6px;background:black;color:white;border:none;border-radius:4px;cursor:pointer;}
 .buttons-row button.active{background:white;color:black;}
@@ -248,8 +248,8 @@ input[type="range"] {
     </div>
 
     <div class="content">
-      <div class="text-area" id="lines"></div>
       <div class="buttons" id="btnContainer"></div>
+      <div class="text-area" id="lines"></div>
     </div>
   </div>
 
