@@ -306,10 +306,14 @@ function buildRows(){
       ? "D平台"
       : "B平台";
 
+  const platformLine = state.E5 === waiting || state.E4 === waiting
+    ? waiting
+    : `${platformPrefix} ${state.E4}`;
+
   return [
     { index: 1, text: state.E3 === waiting ? waiting : `自身: ${state.E3}` },
     { index: 4, text: shadowLine },
-    { index: 7, text: state.E5 === waiting ? waiting : `${platformPrefix} ${state.E5}` }
+    { index: 7, text: platformLine }
   ];
 }
 
