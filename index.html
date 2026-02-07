@@ -121,7 +121,7 @@ input[type="range"] {
 }
 
 #lines .line {
-  font-size: 14px;
+  font-size: 18px;
   line-height: 1.4;
   padding: 0 4px;
 }
@@ -131,7 +131,10 @@ input[type="range"] {
   border-left: 3px solid rgba(130, 210, 255, 0.9);
   border-radius: 3px;
   box-shadow: 0 0 6px rgba(120, 200, 255, 0.35);
-  padding: 2px 6px;
+  font-weight: 700;
+  padding: 6px 10px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .buttons-row button.locked {
@@ -260,25 +263,13 @@ input[type="range"] {
 // ================== 状态变量 ==================
 const state={E1:"MT组去A，ST组去B",F1:"MT组去4，ST组去3",E2:"14点上安全",F2:"A点分身",G2:"C点分身",E3:"分摊-13出-分摊-24出",E4:"两侧",E5:"D点"};
 const CIRCLE_NUM=["①","②","③","④","⑤","⑥","⑦","⑧"];
-const strategies=["盗火改","盗火改Uptime"];
+const strategies=["盗火改"];
 const EMPTY_TEXT = "等待按钮中";
 
 let currentStrategy="盗火改";
 
 // ================== 按钮逻辑 ==================
 const strategyBtnLogic={
-  "盗火改Uptime": {
-    "正点影子":()=>{state.E1="近去1";state.F1="近去D";},
-    "斜点影子":()=>{state.E1="近去D";state.F1="近去1";},
-    "A上下刀":()=>{state.E2="14点上安全";state.F2="A点分身";state.G2="C点分身";},
-    "C上下刀":()=>{state.E2="23外躲钢铁";state.F2="C点分身";state.G2="A点分身";},
-    "正点分摊":()=>{state.E3="分摊-1出-分摊-2出";},
-    "斜点分摊":()=>{state.E3="1出-分摊-2出-分摊";},
-    "进黑洞":()=>{state.E4="两侧";},
-    "没进黑洞":()=>{state.E4="目标圈";},
-    "去D平台":()=>{state.E5="D点";},
-    "去B平台":()=>{state.E5="B点";}
-  },
   "盗火改": {
     "正点影子":()=>{state.E1="B";state.F1="3分摊";},
     "斜点影子":()=>{state.E1="3";state.F1="B分摊";},
@@ -303,11 +294,15 @@ const groupStateKeys = [
 
 function buildRows(){
   const waiting = EMPTY_TEXT;
+  const shadowSource = state.E1 === waiting ? waiting : state.E1;
+  const shadowTarget = state.F1 === waiting ? waiting : state.F1.replace("分摊", "");
+  const shadowLine = shadowSource === waiting || shadowTarget === waiting
+    ? waiting
+    : `影子分摊: ${shadowSource} -> ${shadowTarget}`;
 
   return [
-    { index: 1, text: state.E3 || waiting },
-    { index: 4, text: state.E1 === waiting ? waiting : `${state.E1}` },
-    { index: 6, text: state.F1 === waiting ? waiting : `${state.F1}` },
+    { index: 1, text: state.E3 === waiting ? waiting : `自身: ${state.E3}` },
+    { index: 4, text: shadowLine },
     { index: 7, text: state.E4 === waiting ? waiting : `${state.E4}安全` }
   ];
 }
@@ -354,6 +349,7 @@ const btnList=[
 ];
 const btnGroups=[];
 let blackHoleBtn = null;
+let noBlackHoleBtn = null;
 
 btnList.forEach((group,i)=>{
   const rowDiv=document.createElement("div");
@@ -371,13 +367,20 @@ btnList.forEach((group,i)=>{
     if (name === "进黑洞") {
       blackHoleBtn = btn;
     }
+    if (name === "没进黑洞") {
+      noBlackHoleBtn = btn;
+    }
   });
   btnContainer.appendChild(rowDiv);
 });
 
 function updateBlackHoleLabel(prefix){
-  if (!blackHoleBtn) return;
-  blackHoleBtn.innerText = prefix ? `${prefix}进黑洞` : "进黑洞";
+  if (blackHoleBtn) {
+    blackHoleBtn.innerText = prefix ? `${prefix}进黑洞` : "进黑洞";
+  }
+  if (noBlackHoleBtn) {
+    noBlackHoleBtn.innerText = prefix ? `${prefix}没进黑洞` : "没进黑洞";
+  }
 }
 
 function onBtn(groupIndex,name,btn){
