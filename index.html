@@ -19,7 +19,7 @@ html,body{margin:0;padding:0;background:transparent;font-family:"Microsoft YaHei
   padding:10px 12px;
   border-radius:8px;
   color:#C7FE91;
-  width:460px;
+  width: fit-content;
   box-sizing:border-box;
   position:relative;
   overflow: visible; 
@@ -35,10 +35,10 @@ html,body{margin:0;padding:0;background:transparent;font-family:"Microsoft YaHei
   margin-bottom:6px;
 }
 select{padding:4px;border-radius:4px;border:none;background:#222;color:white;font-size:14px;margin-right:10px;}
-.content{display:flex;flex-direction:column;gap:10px;}
+.content{display:flex;flex-direction:column;gap:10px;width:fit-content;}
 .text-area{flex:1;width:100%;}
-.buttons{display:flex;flex-direction:column;width:100%;}
-.buttons-row{display:flex;justify-content:space-between;margin:2px 0;}
+.buttons{display:flex;flex-direction:column;width:fit-content;}
+.buttons-row{display:flex;gap:6px;justify-content:flex-start;margin:2px 0;width:fit-content;}
 .buttons-row button{flex:0 0 95px;padding:6px;background:black;color:white;border:none;border-radius:4px;cursor:pointer;}
 .buttons-row button.active{background:white;color:black;}
 .fake-select {
