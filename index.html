@@ -30,14 +30,9 @@ html,body{margin:0;padding:0;background:transparent;font-family:"Microsoft YaHei
 .top-bar{
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  margin-bottom:10px;
-}
-.panel-title{
-  font-size:14px;
-  color:#eef;
-  letter-spacing:0.5px;
+  justify-content:flex-end;
+  gap:6px;
+  margin-bottom:6px;
 }
 select{padding:4px;border-radius:4px;border:none;background:#222;color:white;font-size:14px;margin-right:10px;}
 .content{display:flex;justify-content:space-between;}
@@ -104,11 +99,6 @@ select{padding:4px;border-radius:4px;border:none;background:#222;color:white;fon
 
 
 
-.top-bar {
-  border-bottom: 1px solid rgba(255,255,255,0.15);
-  padding-bottom: 6px;
-}
-
 .top-bar label {
   margin-right: 10px;
 }
@@ -134,6 +124,14 @@ input[type="range"] {
   font-size: 14px;
   line-height: 1.4;
   padding: 0 4px;
+}
+
+.line.result {
+  background: linear-gradient(90deg, rgba(0, 140, 210, 0.28), rgba(0, 0, 0, 0));
+  border-left: 3px solid rgba(130, 210, 255, 0.9);
+  border-radius: 3px;
+  box-shadow: 0 0 6px rgba(120, 200, 255, 0.35);
+  padding: 2px 6px;
 }
 
 .buttons-row button.locked {
@@ -163,13 +161,13 @@ input[type="range"] {
 }
 
 #settingsBtn {
-  background: rgba(80,80,80,0.8);
-  border: 1px solid rgba(120,120,120,0.8);
-  color: #ccc;
+  background: rgba(50,50,60,0.9);
+  border: 1px solid rgba(120,120,120,0.6);
+  color: #eee;
   border-radius: 4px;
   padding: 2px 6px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .settings-popout {
@@ -213,18 +211,17 @@ input[type="range"] {
 <div class="panel" id="panel">
   <div id="panelBody">
     <div class="top-bar">
-      <div class="panel-title">FF14 M12S HELPER</div>
       <div class="settings">
         <button id="resetBtn" style="
-          background: rgba(80,80,80,0.8);
-          border: 1px solid rgba(120,120,120,0.8);
-          color: #ccc;
+          background: rgba(50,50,60,0.9);
+          border: 1px solid rgba(120,120,120,0.6);
+          color: #eee;
           border-radius: 4px;
           padding: 2px 6px;
           cursor: not-allowed;
-          font-size: 12px;
-        " disabled>重置</button>
-        <button id="settingsBtn" type="button">设置</button>
+          font-size: 13px;
+        " disabled>🔄</button>
+        <button id="settingsBtn" type="button">⚙️</button>
         <div class="settings-popout" id="settingsPopout">
           <div class="settings-row">
             <span class="label">打法</span>
@@ -308,14 +305,10 @@ function buildRows(){
   const waiting = EMPTY_TEXT;
 
   return [
-    state.E2 || waiting,
-    state.E3 || waiting,
-    state.F2 === waiting ? waiting : `${state.F2}黑洞`,
-    state.G2 === waiting ? waiting : `${state.G2}平台`,
-    state.E1 === waiting ? waiting : `${state.E1}`,
-    (state.E5 === waiting || state.E4 === waiting) ? waiting : `${state.E5}${state.E4}安全`,
-    state.F1 === waiting ? waiting : `${state.F1}`,
-    state.E4 === waiting ? waiting : `${state.E4}安全`
+    { index: 1, text: state.E3 || waiting },
+    { index: 4, text: state.E1 === waiting ? waiting : `${state.E1}` },
+    { index: 6, text: state.F1 === waiting ? waiting : `${state.F1}` },
+    { index: 7, text: state.E4 === waiting ? waiting : `${state.E4}安全` }
   ];
 }
 
@@ -323,11 +316,10 @@ function buildRows(){
 function refresh(){
   const linesDiv=document.getElementById("lines");
   linesDiv.innerHTML="";
-  buildRows().forEach((text,i)=>{
+  buildRows().forEach((row)=>{
     const div=document.createElement("div");
-    div.className="line";
-    if([0,2,3,5].includes(i)) div.classList.add("blue");
-    div.innerText=`${CIRCLE_NUM[i]} ${text}`;
+    div.className="line result";
+    div.innerText=`${CIRCLE_NUM[row.index]} ${row.text}`;
     linesDiv.appendChild(div);
   });
 }
@@ -346,14 +338,22 @@ function resetState() {
     group.forEach(btn => btn.classList.remove("active"))
   );
 
+  updateBlackHoleLabel(null);
   refresh();
 }
 
 
 
 const btnContainer=document.getElementById("btnContainer");
-const btnList=[["正点影子","斜点影子"],["A上下刀","C上下刀"],["正点分摊","斜点分摊"],["进黑洞","没进黑洞"],["去D平台","去B平台"]];
+const btnList=[
+  ["正点影子","斜点影子"],
+  ["A上下刀","C上下刀"],
+  ["正点分摊","斜点分摊"],
+  ["进黑洞","没进黑洞"],
+  ["去D平台","去B平台"]
+];
 const btnGroups=[];
+let blackHoleBtn = null;
 
 btnList.forEach((group,i)=>{
   const rowDiv=document.createElement("div");
@@ -362,17 +362,25 @@ btnList.forEach((group,i)=>{
   group.forEach(name=>{
     const btn=document.createElement("button");
     btn.innerText=name;
+    btn.dataset.action = name;
     btn.classList.add("locked");      
     btn.disabled = true;              
-    btn.onclick=()=>onBtn(i,name);
+    btn.onclick=()=>onBtn(i,btn.dataset.action,btn);
     rowDiv.appendChild(btn);
     btnGroups[i].push(btn);
+    if (name === "进黑洞") {
+      blackHoleBtn = btn;
+    }
   });
   btnContainer.appendChild(rowDiv);
 });
 
-function onBtn(groupIndex,name){
-  const btn=btnGroups[groupIndex].find(b=>b.innerText===name);
+function updateBlackHoleLabel(prefix){
+  if (!blackHoleBtn) return;
+  blackHoleBtn.innerText = prefix ? `${prefix}进黑洞` : "进黑洞";
+}
+
+function onBtn(groupIndex,name,btn){
   if (!btn) return;
   const wasActive = btn.classList.contains("active");
   btnGroups[groupIndex].forEach(b=>b.classList.remove("active"));
@@ -380,12 +388,18 @@ function onBtn(groupIndex,name){
     groupStateKeys[groupIndex].forEach(key => {
       state[key] = EMPTY_TEXT;
     });
+    if (groupIndex === 1) {
+      updateBlackHoleLabel(null);
+    }
     refresh();
     return;
   }
   btn.classList.add("active");
   const logic=strategyBtnLogic[currentStrategy][name];
   if(logic) logic();
+  if (groupIndex === 1) {
+    updateBlackHoleLabel(name.startsWith("A") ? "A" : "C");
+  }
   refresh();
 }
 
