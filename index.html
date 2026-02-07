@@ -300,10 +300,16 @@ function buildRows(){
     ? waiting
     : `影子分摊: ${shadowSource} -> ${shadowTarget}`;
 
+  const platformPrefix = state.E5 === waiting
+    ? "D/B平台"
+    : state.E5.startsWith("D")
+      ? "D平台"
+      : "B平台";
+
   return [
     { index: 1, text: state.E3 === waiting ? waiting : `自身: ${state.E3}` },
     { index: 4, text: shadowLine },
-    { index: 7, text: state.E5 === waiting ? waiting : `D/B平台 ${state.E5}` }
+    { index: 7, text: state.E5 === waiting ? waiting : `${platformPrefix} ${state.E5}` }
   ];
 }
 
