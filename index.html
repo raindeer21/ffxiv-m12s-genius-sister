@@ -303,7 +303,7 @@ function buildRows(){
   return [
     { index: 1, text: state.E3 === waiting ? waiting : `自身: ${state.E3}` },
     { index: 4, text: shadowLine },
-    { index: 7, text: state.E4 === waiting ? waiting : `${state.E4}安全` }
+    { index: 7, text: state.E5 === waiting ? waiting : `D/B平台 ${state.E5}` }
   ];
 }
 
@@ -314,7 +314,7 @@ function refresh(){
   buildRows().forEach((row)=>{
     const div=document.createElement("div");
     div.className="line result";
-    div.innerText=`${CIRCLE_NUM[row.index]} ${row.text}`;
+    div.innerText=row.text;
     linesDiv.appendChild(div);
   });
 }
